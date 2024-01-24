@@ -30,15 +30,28 @@ from CubeModel import CubeModel
 '''
 CUBE_STATE = 'WGBBWGOWO YOWWRYWOB BRBGGBGBG YYROYYYYR GOWROWRWO RROGBBYRG'
 INITIAL_CUBE_STATE = "WWWWWWWWW RRRRRRRRR GGGGGGGGG YYYYYYYYY OOOOOOOOO BBBBBBBBB"
-# cube = CubeModel(CUBE_STATE)
+
+def generateDataset(cube):
+    '''
+    Inputs:
+    - cube: 
+        CubeModel object
+    
+    '''
+
+    cube.printCube()
+    moves = input("ENTER MOVE(S) OR \'q\' TO QUIT\nMoves: ")
+
+    if(moves == 'q'):
+        return
+    cube.scramble(moves)
+    stateStr = cube.getStateStr()
+    
+    
+
+    generateDataset(cube)
+
+
+
 cube = CubeModel(INITIAL_CUBE_STATE)
-
-cube.printCube()
-# cube.B.rotateFace(clockwise=True)
-# print("\n\n")
-
-cube.scramble('F L D L\' D2 R\' B2 F L2 B2 F\' R\' L D\' R L\' D\' L\' U R L2 B F2 D2 B\'')
-
-
-cube.printCube()
-cube.getStateStr()
+generateDataset(cube)
