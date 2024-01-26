@@ -1,4 +1,6 @@
 from CubeModel import CubeModel
+from CameraManager import CameraManager
+
 '''
                 |************|
                 |*U1**U2**U3*|
@@ -31,7 +33,7 @@ from CubeModel import CubeModel
 CUBE_STATE = 'WGBBWGOWO YOWWRYWOB BRBGGBGBG YYROYYYYR GOWROWRWO RROGBBYRG'
 INITIAL_CUBE_STATE = "WWWWWWWWW RRRRRRRRR GGGGGGGGG YYYYYYYYY OOOOOOOOO BBBBBBBBB"
 
-def generateDataset(cube):
+def generateDataset(cube, camera, label, flag=''):
     '''
     Inputs:
     - cube: 
@@ -40,18 +42,23 @@ def generateDataset(cube):
     '''
 
     cube.printCube()
+    if input("Capture image (y/n): ") == "y":
+        camera.capture_image(0, label, flag=flag)
+        
+        
     moves = input("ENTER MOVE(S) OR \'q\' TO QUIT\nMoves: ")
 
     if(moves == 'q'):
         return
     cube.scramble(moves)
-    stateStr = cube.getStateStr()
+    label = cube.getStateStr()
     
     
+    
 
-    generateDataset(cube)
+    generateDataset(cube, camera, label, flag=flag)
 
 
-
+camera = CameraManager()
 cube = CubeModel(INITIAL_CUBE_STATE)
-generateDataset(cube)
+generateDataset(cube, camera, INITIAL_CUBE_STATE, flag="TEST")
