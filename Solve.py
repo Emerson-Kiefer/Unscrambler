@@ -23,7 +23,7 @@ INITIAL_CUBE_STATE = "WWWWWWWWW RRRRRRRRR GGGGGGGGG YYYYYYYYY OOOOOOOOO BBBBBBBB
 def userCreateStateStr():
 	print("SOLVED STATE: " + INITIAL_CUBE_STATE)
 #	value = input("Enter CURRENT state: ")
-	value = "BWBYWBGYR GYWWRBBYY RRWOGOWBR GWYWYOORO WGYROGYRO RGOOBGBBG"
+	value = "GBYRWGRGW OROWROGYY WOBGGRGYR ROWOYGBBG OYBWOWRWY BRWBBBOYY"
 	return value
 	
 def convertColorToCubeString(colorScramble):
@@ -44,28 +44,31 @@ def convertColorToCubeString(colorScramble):
         return -1
     return newScramble
 
+
+	
+
+
 def solve_cube():
 	input("Begin?")
 	stateStr = userCreateStateStr()
 	cube = CubeModel(stateStr)
 	cubeString = convertColorToCubeString(stateStr)
 	solution = kociemba.solve(cubeString)
-	move_arr = solution.split(" ")
-	print(move_arr)
+	#remove spaces to reduce the data size sent via serial
+	solution.replace(" ", "")
 	print(cubeString)
 	print(solution)
-	
-	for move in move_arr:
-		write_read(move, ARDUINO)
-	#print("FROM ARDUINO:", value)
+	write_read(solution, ARDUINO)
 
-def singleMoves():
+def singleMoves(cube):
 	move = input("Move ('q' to quit): ")
 	if move == "q":
 		return
+	cube.scramble(move)
+	move.replace(" ", "")
 	value = write_read(move, ARDUINO)
-	print("ARDUINO MOVE:", value) 
-	singleMoves()
+	print(cube.getStateStr())
+	singleMoves(cube)
 	
 # def multipleMoves(moves):
 	# move_arr = moves.split(" ")
@@ -73,4 +76,4 @@ def singleMoves():
 	
 	
 solve_cube()
-#singleMoves
+#singleMoves(CubeModel(userCreateStateStr()))
