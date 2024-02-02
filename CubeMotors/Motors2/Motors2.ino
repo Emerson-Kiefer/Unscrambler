@@ -1,7 +1,7 @@
 const int BAUDRATE = 9600;
 const int ENABLE_PIN = 12;
 const int STEPS_PER_REV = 200;
-const int STEP_DELAY = 2000;
+const int STEP_DELAY = 660;
 String INPUT_BYTES;
 String MOVES[30];
 int NUM_MOVES = 0;
@@ -71,16 +71,14 @@ void makeMove(String moveString){
   turnMotor(moveStepPin, moveSteps);
 }
 
-int solve(String input){
-  int prev = 0;
-  int delimiter_index = input.indexOf(" ");
-  while(delimiter_index > 0){
-    MOVES[NUM_MOVES] = input.substring(prev, delimiter_index);
-    NUM_MOVES += 1;
-    delimiter_index = input.indexOf(" ", delimiter_index + 1);
-  }
-  for(int i = 0; i < NUM_MOVES; i++){
-    makeMove(MOVES[i]);
+int solve(String input, int inputLength){
+  for (int i = 0; i < inputLength; i++){
+    if ((i < inputLength - 1) && (input.charAt(i + 1) == '2' || input.charAt(i + 1) == '\'')){
+      makeMove(input.substring(i, i + 2));
+      i++;
+    } else {
+      makeMove(input.substring(i, i + 1));
+    }
   }
 }
 
@@ -95,11 +93,12 @@ void setup() {
 }
 
 void loop() {
-  //while(!Serial.available());
-  //String INPUT_BYTES = Serial.readString();
-  String INPUT_BYTES = "U D F' B2 U' D' L F U' D2 F' R2 U B2 R2 U D2 B2 L2 F2 D'";
-  Serial.print(INPUT_BYTES);
-  makeMove(INPUT_BYTES);
-  while(1);
+  while(!Serial.available());
+  delay(100);
+  int dataSize = Serial.available();
+  String INPUT_BYTES = Serial.readString();
+//  String INPUT_BYTES = "UDF'B2U'D'LFU'D2F'R2UB2R2UD2B2L2F2D'";/
+  //makeMove(INPUT_BYTES);
+  solve(INPUT_BYTES, dataSize);
   
 }
